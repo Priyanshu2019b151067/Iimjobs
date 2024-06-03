@@ -1,0 +1,15 @@
+.nav-right {
+    margin-left: auto;
+}
+.nav-button-design{
+    margin: 10px;
+    text-decoration: none;
+    background-color: rgba(73,150,110,0.04);
+    border: 1px solid #49966E;
+    border-radius: 50px;
+    
+}
+.button-text-color{
+    color: #49966E !important;
+    font-weight: 500 !important;
+}
