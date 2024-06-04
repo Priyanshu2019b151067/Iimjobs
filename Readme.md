@@ -38,3 +38,4 @@ Recuriter can  create a job such that
 
 
 Task 1 : Work on Recuriter Profile Creation.
+Task 2 : need to improve the signup form and create login form

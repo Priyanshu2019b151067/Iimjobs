@@ -10,9 +10,9 @@ const getall = async (req,res)=>{
 
 const createCompany = async (req,res)=>{
     try {
-        const {companyName} = req.body;
+        const {name} = req.body;
         const newCompany = new Company({
-            companyName
+            name
         });
         await newCompany.save();
         res.status(201).json({newCompany});

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Navbar, Nav } from 'react-bootstrap';
 import Logo from '../../images/iimjobs.svg'
 import './recruiterNavbar.css'
@@ -8,7 +8,7 @@ import { FaRegHandPointRight } from "react-icons/fa";
 
 import { Link } from 'react-router-dom';
 
-function RecruiterNavbar() {
+function RecruiterNavbar({handleButtonClick}) {
   return (
     <div className='container'>
        <Navbar bg="white" variant="white" sticky="top" style={{}}>
@@ -19,16 +19,14 @@ function RecruiterNavbar() {
         <Nav.Link as={Link}  to={'/'} className='link-adjustment' >
           Looking for job ?
         </Nav.Link>
-        <button className='nav-button-design'>
-        <Nav.Link as={Link}  to={'/recruiter'} className='button-text-color' >
+        <button className='nav-button-design' onClick={handleButtonClick}>
+        <Nav.Link  className='button-text-color' >
             Sign Up
-
             <FaRegHandPointRight style={{
               fontSize : '20px',
               marginLeft : '4px',
               paddingBottom : '3px'
             }} />
-
         </Nav.Link>
         </button>
       </Nav>

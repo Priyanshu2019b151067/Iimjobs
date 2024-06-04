@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken');
 const registerRecuriter = async (req,res)=>{
     try {
         const {fullName,email,password,phone,location,designation,type,entityId} = req.body;
+        console.log(fullName);
         const salt =  await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(password,salt);
         const newRecuiter = new recuriterProfile({
@@ -64,6 +65,17 @@ const loginRecuriter = async (req,res) =>{
     }
 }
 
+const getCompanyNConsultancy = async (req,res) =>{
+    try {
+        const companies = await Company.find();
+        const consultancy = await Consultant.find();
+        res.status(200).json({companies,consultancy});
+    } catch (error) {
+        res.status(500).json({error : error.message});
+    }
+}
 module.exports = {
-    registerRecuriter,loginRecuriter
+    registerRecuriter,
+    loginRecuriter,
+    getCompanyNConsultancy
 }

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Navbar, Nav } from 'react-bootstrap';
-import Logo from '../images/iimjobs.svg'
+import Logo from '../../images/iimjobs.svg'
 import './loginNavbar.css'
 // icons
 import { TiDownload } from "react-icons/ti";
