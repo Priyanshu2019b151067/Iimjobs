@@ -4,14 +4,25 @@ import CloseImage from '../../images/close.png'
 import { FaRegBuilding } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import axios from 'axios';
+import { IoIosAddCircleOutline } from "react-icons/io";
+
+
+
+
 function Signup({ onClose }) {
     
     const [companyChecked, setcompanyChecked] = useState(false);
     const [consultantChecked, setconsultantChecked] = useState(false);
     const [passwordMatched, setpasswordMatched] = useState(true);
-
-    const handleButtonClick = (button) => {
-        if (button === 1) {
+    const [phoneError, setphoneError] = useState('');
+    const [allError,setallError] = useState('');
+    const [companies,setCompanies] = useState([]);
+    const [consultancy,setConsultancy] = useState([]);
+    const [ifAdd,setifAdd] = useState(false);
+  
+    const handleButtonClick = (buttonNumber) => {
+        //console.log(button)
+        if (buttonNumber === 1) {
           setcompanyChecked(true);
           setconsultantChecked(false);
         } else {
@@ -31,11 +42,10 @@ function Signup({ onClose }) {
         organization : '',
         password : '',
         designation : '',
-        repeatPassword : ''
+        repeatPassword : '',
+        newOrg : ''
   })    
 
-  const [companies,setCompanies] = useState([]);
-  const [consultancy,setConsultancy] = useState([]);
 
   const options =  (companyChecked ? companies : (consultantChecked ? consultancy : []));
   useEffect(()=>{
@@ -50,9 +60,19 @@ function Signup({ onClose }) {
         }
     }   
     getCompanyNConsultancy();
-  },[])
-  const handleSubmit = async (e)=>{
-    e.preventDefault();
+  },[]);
+
+
+  const handleformSubmit = async (e)=>{
+      e.preventDefault();
+      console.log('here also')
+      if(signupData.fullName === '' || signupData.location === '' || signupData.designation === '' ||
+      signupData.email === ''  || signupData.password === '' || signupData.phone === '' || signupData.organization === ''
+  ){
+      setallError('Please fill all the value.')
+      return;
+  }
+  setallError('');
     if(signupData.password !== signupData.repeatPassword){
         setpasswordMatched(false);
         return;
@@ -64,39 +84,129 @@ function Signup({ onClose }) {
         email : signupData.email,
         password : signupData.password,
         designation : signupData.designation,
-        type : companyChecked ? 'Company' : 'Consultant',
+        type : (companyChecked ? 'Company' : 'Consultant'),
         entityId : signupData.organization
     }
-    console.log(data);
     
-    // password : hashPassword,
-    // phone,
-    // location,
-    // designation,
-    // type,
-    // entityId
-    const response = await axios.post('http://localhost:3000/recruiter/register',data);
-    console.log(response.data);
+    try {
+        const response = await axios.post('http://localhost:3000/recruiter/register',data);
+        console.log(response.data);
+        if(response.status === 201){
+            clearFields();
+        }
+    } catch (error) {
+       setallError(error.response.data.error);
+    }
 }
 
 
-
+ const clearFields = ()=>{
+    setsignupData({
+        fullName : '',
+        location : '',
+        phone : '',
+        email : '',
+        organization : '',
+        password : '',
+        designation : '',
+        repeatPassword : ''
+    })
+ }
   const handleChange = (e) => {
     const  {name,value} = e.target;
+    if(name === 'phone'){
+        if (!/^\d*$/.test(value)) {
+            setphoneError('Only numbers are allowed.');
+            return;
+        }
+        if (value.length > 10) {
+            setphoneError('Phone number cannot exceed 10 digits.');
+            return;
+        }
+    }
     //console.log(name,value);
+    setphoneError('');
     setsignupData({...signupData,[name] : value});
   }
+  const handleAdd = ()=>{
+    if(companyChecked === false && consultantChecked === false){
+        setallError('Please select org type.');
+        return;
+    }
+    setifAdd(true);
+  }
+
+  const addOrg = async ()=>{
+    if(companyChecked === false && consultantChecked === false){
+        setallError('Please select org type.');
+        return;
+    }else if(companyChecked){
+        try {
+           const data = {name : signupData.newOrg}
+           const response = await axios.post('http://localhost:3000/company/create',data);
+           if(response.status === 201){
+               setCompanies(response.data.allCompany);
+               setsignupData({
+                organization : response.data.newCompany._id
+               })
+               setallError('');
+               setifAdd(false);
+           }
+        //    console.log(response.data.allCompany)
+        } catch (error) {
+            setallError(error.response.data.error)
+        }
+    }else{
+        try {
+            const data = {name : signupData.newOrg}
+            const response = await axios.post('http://localhost:3000/consultant/create',data);
+            if(response.status === 201){
+                setConsultancy(response.data.allConsultant);
+                setsignupData({
+                 organization : response.data.newConsultancy._id
+                })
+                setallError('');
+                setifAdd(false);
+            }
+         //    console.log(response.data.allCompany)
+         } catch (error) {
+             setallError(error.response.data.error)
+         }
+    }
+  }
+ const organization = ifAdd  ?   <>
+ <label htmlFor="newOrg">Add Organization</label>
+ <input type='text' id='newOrg' name='newOrg' placeholder='Type org Name' className='input-style' value={signupData.newOrg} onChange={handleChange} style={{width : '80%'}}/>
+  <button type='button' className='add-org-btn' onClick={addOrg}>Add</button>
+
+ </> : <>
+ <label htmlFor="organization">Organization</label>
+ <select id='organization' name='organization' className='input-style' value={signupData.organization} onChange={handleChange} style={{width : '85%'}} >
+                <option value="" >Select an option</option>
+                {
+                    options.map((option) =>(
+                        <option key={option._id} value={option._id} >
+                            {option.name}
+                        </option>
+                    ))
+                }
+
+            </select>
+            
+            <IoIosAddCircleOutline fontSize='23px' style={{margin : '4px',paddingBottom : '4px',cursor :'pointer'}}  onClick={handleAdd}/>
+ </>;
+
   return (
     <div className="signup-overlay">
-        <img src={CloseImage} alt="closeButton" srcset=""  onClick={onClose} className='close-button-new'/>
+        <img src={CloseImage} alt="closeButton"   onClick={onClose} className='close-button-new'/>
       <div className="signup-container">
 
         <p className='register-text-heading'>Post a job for free</p>
         <p className='register-text-subheader'>Register,post a job and easily find great talent for your company or clients!</p>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleformSubmit}>
           <div className='row'>
             <div className='col-6'>
-                <button className='type-btn' onClick={()=>handleButtonClick(1)}
+                <button type='button' className='type-btn' onClick={()=>handleButtonClick(1)}
                 style={{ border: companyChecked ? '2px solid darkgreen' : '' }}
                 >
                     <FaRegBuilding fontSize='23px' style={{
@@ -104,9 +214,11 @@ function Signup({ onClose }) {
                         paddingBottom :'4px'
                     }} />
                 I am a Company</button>
+              
+
             </div>
             <div className='col-6'>
-                <button className='type-btn' onClick={()=>handleButtonClick(2)} 
+                <button type='button' className='type-btn' onClick={()=>handleButtonClick(2)} 
                 style={{ border: consultantChecked ? '2px solid darkgreen' : '' }}
                 >
                 <CgProfile  fontSize='23px' style={{
@@ -114,8 +226,12 @@ function Signup({ onClose }) {
                         paddingBottom :'4px'
                     }} />
                 I am a Consultant</button>
+              
             </div>
-
+            <p className='error-password-recruiter' style={{
+                color:'gray',
+                textAlign : 'right'
+            }}>Please select organization type.</p>
             <div className='col-6'>
                 <label htmlFor="fullName">Name</label>
                 <input type='text' id='fullName' name='fullName' value={signupData.fullName} placeholder='Write your full name' className='input-style' onChange={handleChange}/>
@@ -127,7 +243,10 @@ function Signup({ onClose }) {
 
             <div className='col-6'>
                 <label htmlFor="phone">Phone</label>
-                <input type='number' id='phone' name='phone' value={signupData.phone} placeholder='e.g. 9873721034' className='input-style' onChange={handleChange}/>
+                <input type='text' id='phone' name='phone' value={signupData.phone} placeholder='e.g. 9873721034' className='input-style' onChange={handleChange}/>
+                <p className='error-password-recruiter' style={{
+                color:'gray'
+            }}>{phoneError}</p>
             </div>
             <div className='col-6'>
             <label htmlFor="email">Work email id</label>
@@ -135,10 +254,10 @@ function Signup({ onClose }) {
             </div>
 
             <div className='col-6'>
-            <label htmlFor="organization">Organization</label>
+            {/* <label htmlFor="organization">Organization</label> */}
             {/* need drop down lere */}
-           
-            <select id='organization' name='organization' className='input-style' value={signupData.organization} onChange={handleChange}>
+            {organization}
+            {/* <select id='organization' name='organization' className='input-style' value={signupData.organization} onChange={handleChange} style={{width : '85%'}} >
                 <option value="" >Select an option</option>
                 {
                     options.map((option) =>(
@@ -149,6 +268,14 @@ function Signup({ onClose }) {
                 }
 
             </select>
+            
+            <IoIosAddCircleOutline fontSize='23px' style={{margin : '4px',paddingBottom : '4px',cursor :'pointer'}}  onClick={handleAdd}/> */}
+{/*             
+            <label htmlFor="password">Password</label>
+                <input type='password' id='password' name='password' placeholder='Set a password' className='input-style' value={signupData.password} onChange={handleChange}/> */}
+            <p className='error-password-recruiter' style={{
+                color:'gray',
+            }}>Add if organization not in list.</p>
             </div>
             <div className='col-6'>
             <label htmlFor="designation">Designation</label>
@@ -164,8 +291,8 @@ function Signup({ onClose }) {
                 <input type='password' id='repeatPassword' name='repeatPassword' placeholder='Re-enter password' className='input-style' value={signupData.repeatPassword} onChange={handleChange}/>
             {passwordMatched ?null : <p className='error-password-recruiter'>The password you entered do not match</p>}            
             </div>
-            
-            <button type='submit' className='sign-up-btn-recruiter' onSubmit={handleSubmit}>Register</button>
+            <p className='error-password-recruiter'>{allError}</p>
+            <button type='submit' className='sign-up-btn-recruiter' onSubmit={handleformSubmit}>Register</button>
 
           </div>
         </form>

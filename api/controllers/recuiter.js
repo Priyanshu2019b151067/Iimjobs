@@ -12,6 +12,16 @@ const registerRecuriter = async (req,res)=>{
         console.log(fullName);
         const salt =  await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(password,salt);
+        let recuriter = await recuriterProfile.findOne({
+            $or : [
+                {email : email},
+                {phone  : phone}
+            ]
+        });
+        if(recuriter){
+            return res.status(400).json({ error : 'Email or Phone already exist.'})
+        }
+        recuriter = await recuriterProfile.findOne({phone});
         const newRecuiter = new recuriterProfile({
             fullName,
             email,
@@ -23,7 +33,7 @@ const registerRecuriter = async (req,res)=>{
             entityId
         });
         if(!['Company','Consultant'].includes(type)){
-            res.status(400).json({ error : 'Invalid type'});
+          return res.status(400).json({ error : 'Invalid type'});
         }
 
         let entity;
