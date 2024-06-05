@@ -5,7 +5,7 @@ import LoginNavbar from './pages/login/LoginNavbar';
 import RecruiterPage from './pages/recruiter/index';
 import DownloadPage from './pages/download';
 import Signup from './pages/recruiter/Signup';
-
+import Welcome from './pages/recruiter/Welcome';
 function App() {
 
   return (
@@ -15,9 +15,10 @@ function App() {
        <Route path='/recruiter' element={<RecruiterPage/>}></Route> 
        <Route path='/download' element={<DownloadPage/>}></Route> 
        <Route path='/signup' element= {<Signup/>} ></Route> 
+       <Route path='/welcome' element ={<Welcome/>} ></Route>
       </Routes>    
     </BrowserRouter>
   )
 }
 
-export default App
+export default App 

@@ -1,15 +1,16 @@
 const recuriterProfile =require('../models/recuriter');
 const Company =require('../models/companies');
 const Consultant = require('../models/consultant');
-
+const transporter = require('../mail/transporterConfigure');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const  {sendEmail} = require('../mail/recruiterVerification');
 
 
 const registerRecuriter = async (req,res)=>{
     try {
         const {fullName,email,password,phone,location,designation,type,entityId} = req.body;
-        console.log(fullName);
+        // console.log(fullName);
         const salt =  await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(password,salt);
         let recuriter = await recuriterProfile.findOne({
@@ -48,9 +49,28 @@ const registerRecuriter = async (req,res)=>{
         }
 
         await newRecuiter.save();
+
+        const verificationToken = 'generated-verification-token'; // Generate a token in practice
+
+        const mailOptions = {
+            from: 'priyanshukingh@gmail.com',
+            to: email,
+            subject: 'Email Verification',
+            html: `<h1>Hello </h1><p>Please verify your email by clicking the following link: <a href="http://localhost:3000/verify-email?token=${verificationToken}">Verify Email</a></p>`
+        };
+        
+        
+        //await sendEmail(email,'Email Verification',`<h1>Hello </h1><p>Please verify your email by clicking the following link: <a href="http://localhost:3000/verify-email?token">Verify Email</a></p>`);
+         
+    try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Email sent:', info.response);
+      } catch (error) {
+        console.error('Error sending email:', error);
+      }
         const payload = {id : newRecuiter._id,email,fullName};
         const token = jwt.sign(payload,process.env.JWT_SECRET);
-        res.status(201).json({token,newRecuiter});
+        res.status(201).json({token,newRecuiter, message: 'Verification email sent'});
     } catch (error) {
         res.status(500).json({error : error.message});
     }

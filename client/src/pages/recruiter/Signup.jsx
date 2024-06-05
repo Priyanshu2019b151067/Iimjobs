@@ -5,12 +5,17 @@ import { FaRegBuilding } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import axios from 'axios';
 import { IoIosAddCircleOutline } from "react-icons/io";
-
-
+import {useDispatch, useSelector} from 'react-redux'
+import { setRegister } from '../../state/recruiter';
+import { useNavigate } from 'react-router-dom';
 
 
 function Signup({ onClose }) {
-    
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    // const state  = useSelector((state) => state);
+    // useDispatch
+    // console.log(state);
     const [companyChecked, setcompanyChecked] = useState(false);
     const [consultantChecked, setconsultantChecked] = useState(false);
     const [passwordMatched, setpasswordMatched] = useState(true);
@@ -90,8 +95,15 @@ function Signup({ onClose }) {
     
     try {
         const response = await axios.post('http://localhost:3000/recruiter/register',data);
-        console.log(response.data);
+        console.log(response.data.newRecuiter);
+        console.log(response.data.token);
+
         if(response.status === 201){
+            dispatch(setRegister({
+                recruit : response.data.newRecuiter,
+                token : response.data.token
+            }))
+            navigate('/welcome')
             clearFields();
         }
     } catch (error) {
