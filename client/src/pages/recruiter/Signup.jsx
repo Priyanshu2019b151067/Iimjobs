@@ -159,6 +159,7 @@ function Signup({ onClose }) {
            if(response.status === 201){
                setCompanies(response.data.allCompany);
                setsignupData({
+                ...signupData,
                 organization : response.data.newCompany._id
                })
                setallError('');
@@ -175,6 +176,7 @@ function Signup({ onClose }) {
             if(response.status === 201){
                 setConsultancy(response.data.allConsultant);
                 setsignupData({
+                 ...signupData,
                  organization : response.data.newConsultancy._id
                 })
                 setallError('');
