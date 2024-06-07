@@ -1,14 +1,42 @@
 const transporter = require('./transporterConfigure');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
-const sendVerificationEmail = async (to,name) => {
-    const verificationToken = 'generated-verification-token';
+const secretKey = process.env.VERIFICATION_SECRET;
+
+function generateVerificationToken(payload) {
+  const options = { expiresIn: '1h' };
+  return jwt.sign(payload, secretKey, options);
+}
+
+function verifyToken(token) {
+  try {
+    const decoded = jwt.verify(token, secretKey);
+    return { valid: true, decoded };
+  } catch (error) {
+    return { valid: false, error: error.message };
+  }
+}
+
+
+
+const sendEmail = async (to,name)=>{
+  const userPayload = {email : to,name};
+  const token = generateVerificationToken(userPayload);
+  sendVerificationEmail(to,name,token);
+}
+
+
+const sendVerificationEmail = async (to,name,token) => {
+
+    const verificationLink = `http://localhost:5173/verify-email?token=${token}`;
     const mailOptions = {
-      from: process.env.EMAIL_USER || 'priyanshukingh@gmail.com',
+      from: process.env.EMAIL_USER,
       to,
       subject : 'iimjobs.com Registration - Please activate your account',
       html : `<p>Dear ${name}</p>
       <br>
-      <p>Thank you for registering on iimjobs.com . <a href=''>Please click</a> here to activate the account.</p>
+      <p>Thank you for registering on iimjobs.com . <a href='${verificationLink}'>Please click</a> here to activate the account.</p>
       <br>
       <p>This is to confirm your email address.</p>
       <br>
@@ -30,6 +58,7 @@ const sendVerificationEmail = async (to,name) => {
     }
 };
 
+
    // const verificationToken = 'generated-verification-token'; // Generate a token in practice
 
         // const mailOptions = {
@@ -50,5 +79,5 @@ const sendVerificationEmail = async (to,name) => {
     //   }
 module.exports = 
 {
-  sendVerificationEmail
+  sendVerificationEmail,verifyToken,sendEmail
 }

@@ -4,7 +4,7 @@ const Consultant = require('../models/consultant');
 const transporter = require('../mail/transporterConfigure');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { sendVerificationEmail } = require('../mail/recruiterVerification');
+const { sendEmail } = require('../mail/recruiterVerification');
 
 
 
@@ -50,7 +50,7 @@ const registerRecuriter = async (req,res)=>{
         }
 
         await newRecuiter.save();
-        await sendVerificationEmail(email,fullName);
+        await sendEmail(email,fullName);
      
         const payload = {id : newRecuiter._id,email,fullName};
         const token = jwt.sign(payload,process.env.JWT_SECRET);
@@ -63,17 +63,18 @@ const registerRecuriter = async (req,res)=>{
 const loginRecuriter = async (req,res) =>{
     try {
         const {email,password} = req.body;
-        const recuiter = await recuriterProfile.findOne({email});
-        if(!recuiter){
-            res.status(404).json({message : "recruiter not found"});
+        console.log(email);
+        const recruiter = await recuriterProfile.findOne({email});
+        if(!recruiter){
+            return res.status(404).json({message : "recruiter not found"});
         }
-        const match = await bcrypt.compare(password,recuiter.password);
+        const match = await bcrypt.compare(password,recruiter.password);
         if(!match){
-            res.status(404).json({message : "password incorrect"});
+            return res.status(404).json({message : "password incorrect"});
         }
-        const payload = {id : recuiter._id,email,fullName : recuiter.fullName}
+        const payload = {id : recruiter._id,email,fullName : recruiter.fullName}
         const token = jwt.sign(payload,process.env.JWT_SECRET);
-        res.status(200).json({token,recuiter});
+        res.status(200).json({token,recruiter});
     } catch (error) {
         res.status(500).json({error : error.message});
     }

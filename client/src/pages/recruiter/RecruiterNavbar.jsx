@@ -10,9 +10,9 @@ import { Link } from 'react-router-dom';
 
 function RecruiterNavbar({handleButtonClick}) {
   return (
-    <div className='container'>
-       <Navbar bg="white" variant="white" sticky="top" style={{}}>
-      <Navbar.Brand as={Link} to={'/'}>
+    <div className='container-fluid'>
+       <Navbar bg="white" variant="white" sticky="top" className='recruiter-navbar-main'>
+      <Navbar.Brand as={Link} to={'/recruiter'}>
         <img src={Logo} alt='iimjobs logo' style={{width:'6rem'}}/>
       </Navbar.Brand>
       <Nav className='nav-right'>

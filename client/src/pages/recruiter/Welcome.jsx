@@ -9,7 +9,7 @@ import { CiLogout } from "react-icons/ci";
 const Popup = ({onClose}) =>{
     const state = useSelector((state) => state);
     console.log(state);
-    const popupRef = useRef(null);
+    //const popupRef = useRef(null);
     const navigate =  useNavigate();
     const dispatch = useDispatch();
 
@@ -20,8 +20,8 @@ const Popup = ({onClose}) =>{
     return (
         <div className='pop-up-overlay'>
           <div>
-            <p className='name-style'>{state.recruit.fullName}</p>
-            <p className='email-style'>{state.recruit.email}</p>
+            <p className='name-style'>{state.recruiter.recruit.fullName}</p>
+            <p className='email-style'>{state.recruiter.recruit.email}</p>
             <button onClick={logout} className='pop-up-botton'>
             <CiLogout />Logout</button>
           </div>

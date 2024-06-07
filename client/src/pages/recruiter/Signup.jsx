@@ -207,7 +207,7 @@ function Signup({ onClose }) {
 
             </select>
             
-            <IoIosAddCircleOutline fontSize='23px' style={{margin : '4px',paddingBottom : '4px',cursor :'pointer'}}  onClick={handleAdd}/>
+            <IoIosAddCircleOutline fontSize='36px' style={{margin : '4px',paddingBottom : '4px',cursor :'pointer'}}  onClick={handleAdd}/>
  </>;
 
   return (

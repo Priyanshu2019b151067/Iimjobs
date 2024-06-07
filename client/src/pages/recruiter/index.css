@@ -1,0 +1,43 @@
+.title-heading{
+    font-size: 66px;
+    font-weight: 700;
+}
+.main-row{
+    height: 100vh;
+    padding: 66px 70px;
+}
+.introduction-container-subheader{
+    font-size: 18px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 300;
+    line-height: 1.61;
+    margin-top: 14px;
+}
+.remarkable-points-container {
+    margin: 64px 0 46px;
+    display: flex;
+    grid-gap: 83px;
+    gap: 83px;
+}
+.remarkable-point-container {
+    display: flex;
+    grid-gap: 18px;
+    gap: 18px;
+    align-items: center;
+}
+.point-image {
+    max-width: 50px;
+    width: 100%;
+}
+.point-text {
+    text-align: left;
+}
+.point-main-text {
+    color: #149075;
+    font-family: "Nunito Sans", sans-serif;
+    font-size: 25px;
+    font-weight: 800;
+}
+.point-sub-text {
+    color: #2b2b2b;
+}

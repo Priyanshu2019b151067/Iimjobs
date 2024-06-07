@@ -10,7 +10,7 @@ const morgan = require('morgan');
 const companyRouter = require('./routes/company');
 const recruiterRouter = require('./routes/recruiter');
 const consultantRouter = require('./routes/consultant');
-
+const verifyRouter = require('./routes/verification');
 
 dotenv.config();
 const app = express();
@@ -27,6 +27,7 @@ app.use(cors());
 app.use('/company',companyRouter);
 app.use('/consultant',consultantRouter);
 app.use('/recruiter',recruiterRouter);
+app.use('/verify',verifyRouter);
 
 
 
