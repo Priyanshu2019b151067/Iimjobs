@@ -1,5 +1,6 @@
 const transporter = require('./transporterConfigure');
 const jwt = require('jsonwebtoken');
+const recuriterProfile = require('../models/recuriter');
 require('dotenv').config();
 
 const secretKey = process.env.VERIFICATION_SECRET;
@@ -23,7 +24,7 @@ function verifyToken(token) {
 const sendEmail = async (to,name)=>{
   const userPayload = {email : to,name};
   const token = generateVerificationToken(userPayload);
-  sendVerificationEmail(to,name,token);
+  await sendVerificationEmail(to,name,token);
 }
 
 
@@ -58,7 +59,44 @@ const sendVerificationEmail = async (to,name,token) => {
     }
 };
 
+const sendForgetPasswordEmail = async (to,name,token) => {
 
+  const verificationLink = `http://localhost:5173/reset-password?email=${to}&token=${token}`;
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to,
+    subject : 'iimjobs.com Reset Password',
+    html : `<p>Dear ${name}</p>
+    <br>
+    <p>It seems you have forgotten your password.Please <a href='${verificationLink}'>click here</a> to reset your password.</p>
+    <br>
+    <p>Do let us know if you face any problem in resetting your password.</p>
+    <br>
+    
+    <p>Best Regards</p>
+    <br>
+    <p>Team iimjobs.com</p>
+    <br>
+    <p>info@iimjobs.com</p>      
+    `
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent:', info.response);
+  } catch (error) {
+    console.error('Error sending email:', error);
+  }
+};
+
+const sendForget = async (to) =>{
+  const  userPayload = {email : to};
+ 
+  const token = generateVerificationToken(userPayload);
+  const recruiter = await recuriterProfile.findOne({email : to});
+  console.log(to,recruiter,token)
+  await sendForgetPasswordEmail(to,recruiter.fullName,token);
+}
    // const verificationToken = 'generated-verification-token'; // Generate a token in practice
 
         // const mailOptions = {
@@ -79,5 +117,5 @@ const sendVerificationEmail = async (to,name,token) => {
     //   }
 module.exports = 
 {
-  sendVerificationEmail,verifyToken,sendEmail
+  sendVerificationEmail,verifyToken,sendEmail,sendForget
 }

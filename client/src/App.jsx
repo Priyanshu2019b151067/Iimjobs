@@ -6,13 +6,14 @@ import RecruiterPage from './pages/recruiter/index';
 import DownloadPage from './pages/download';
 import Signup from './pages/recruiter/Signup';
 import Welcome from './pages/recruiter/Welcome';
-import VerifyEmail from './pages/recruiter/VerifyEmail';
+import VerifyEmail from './pages/recruiter/email/VerifyEmail';
 import DashBoard from './pages/recruiter/home/index'
 import PrivateRoute from './pages/recruiter/PrivateRoute';
 import RedirectToDashboard from './pages/recruiter/RedirectToDashboard';
 import WelPrivate from './pages/recruiter/private/WelPrivateRoute'
 import { useSelector } from 'react-redux';
-
+import ResetPassword from './pages/recruiter/email/ResetPassword';
+import ErrorPage from './pages/error/index'
 // const RedirectHandler = () => {
 //   const token = useSelector((state) => state.token);
 //   const data = useSelector((state) => state.recruit);
@@ -39,6 +40,8 @@ function App() {
        <Route path='/download' element={<RedirectToDashboard><DownloadPage/></RedirectToDashboard>}></Route> 
        <Route path='/signup' element= {<RedirectToDashboard><Signup/></RedirectToDashboard>} ></Route> 
        <Route path='/verify-email' element = {<VerifyEmail/>} ></Route>
+       <Route path='/reset-password' element= {<ResetPassword/>}></Route>
+       <Route path='/error' element={<ErrorPage/>}></Route>
         {/* Protected Routes */}
         
        <Route path='/welcome' element ={<WelPrivate><Welcome/></WelPrivate>} ></Route>

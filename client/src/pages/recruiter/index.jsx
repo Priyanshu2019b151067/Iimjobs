@@ -2,7 +2,7 @@ import { useState } from "react";
 import React from "react";
 import RecruiterNavbar from "./RecruiterNavbar";
 import Signup from "./Signup";
-import Login from "./Login";
+import Login from "./login/Login";
 import Heart from "../../images/heart-large.png";
 import Remarkable2 from "../../images/remarkable-2.svg";
 import Remarkable1 from "../../images/remarkable-1.svg";

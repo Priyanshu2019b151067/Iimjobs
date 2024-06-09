@@ -1,15 +1,29 @@
 import React, { useState,useEffect } from "react";
-import "./recruiterNavbar.css";
+import "../recruiterNavbar.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios'
 import { useDispatch, useSelector } from "react-redux";
-import { setRegister } from "../../state/recruiter";
-import { setWelcome } from "../../state/welcome";
+import { setRegister } from "../../../state/recruiter";
+import { setWelcome } from "../../../state/welcome";
+import ForgetPassword from "./ForgetPassword";
 
-const LoginBox = () => {
-  return;
+
+const LoginBox = ({handleButtonClick}) => {
+  const [showPassword,setshowPassword] = useState(false);
+ 
+  const handlePassword = ()=>{
+    setshowPassword(!showPassword);
+  }
+  return (
+    <>
+    {showPassword ? <ForgetPassword setshowPassword={handlePassword}/> : <Login handleButtonClick={handleButtonClick} forgetPassword={handlePassword}/>}
+    </>
+  );
 };
-function Login({ handleButtonClick }) {
+
+
+
+function Login({ handleButtonClick,forgetPassword }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
  
@@ -70,6 +84,7 @@ function Login({ handleButtonClick }) {
   //     window.removeEventListener('popstate', () => {});
   //   };
   // }, []);
+  
   return (
     <div
       className="container-fluid p-4 m-2"
@@ -123,6 +138,7 @@ function Login({ handleButtonClick }) {
                     color: "#149075",
                     fontSize: "14px",
                   }}
+                   onClick={forgetPassword}
                 >
                   Forget Password ?
                 </Link>
@@ -174,4 +190,4 @@ function Login({ handleButtonClick }) {
   );
 }
 
-export default Login;
+export default LoginBox;
