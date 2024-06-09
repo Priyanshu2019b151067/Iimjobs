@@ -20,9 +20,9 @@ function WelcomeNavbar({togglePopup}) {
 
   
   return (
-    <div className="container-fluid">
+    <div className="container-fluid" >
       <Navbar bg="white" variant="white" sticky="top">
-        <Navbar.Brand as={Link} to={"/"}>
+        <Navbar.Brand as={Link} to={"/welcome"}>
           <img src={Logo} alt="iimjobs logo" style={{ width: "6rem" }} />
         </Navbar.Brand>
 

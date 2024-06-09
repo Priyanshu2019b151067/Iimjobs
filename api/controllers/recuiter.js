@@ -52,9 +52,8 @@ const registerRecuriter = async (req,res)=>{
         await newRecuiter.save();
         await sendEmail(email,fullName);
      
-        const payload = {id : newRecuiter._id,email,fullName};
-        const token = jwt.sign(payload,process.env.JWT_SECRET);
-        res.status(201).json({token,newRecuiter, message: 'Verification email sent'});
+       
+        res.status(201).json({newRecuiter, message: 'Verification email sent'});
     } catch (error) {
         res.status(500).json({error : error.message});
     }
@@ -71,6 +70,9 @@ const loginRecuriter = async (req,res) =>{
         const match = await bcrypt.compare(password,recruiter.password);
         if(!match){
             return res.status(404).json({message : "password incorrect"});
+        }
+        if(!recruiter.verified){
+            return res.status(206).json({recruiter})
         }
         const payload = {id : recruiter._id,email,fullName : recruiter.fullName}
         const token = jwt.sign(payload,process.env.JWT_SECRET);

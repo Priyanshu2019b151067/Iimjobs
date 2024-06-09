@@ -45,3 +45,26 @@
     background-color: azure;
 
 }
+.main-wrapper {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+.main-wrapper h1 {
+    color: #333;
+    margin-top: 50px;
+    line-height: 1.5;
+}
+.main-wrapper p {
+    font-size: 14px;
+    color: #5b5b5b;
+    margin: 15px 0;
+    line-height: 1.5;
+}
+.footer {
+    background-image: url('../../images/bgDownload.png');
+    background-size: cover; /* Adjust background size as needed */
+    background-position: center; /* Adjust background position as needed */
+    height: 200px; /* Adjust the height as needed */
+    color: white; /* Optional: Text color for better readability */
+  }

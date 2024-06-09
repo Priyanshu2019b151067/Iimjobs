@@ -43,6 +43,10 @@ const recuriterProfileSchema = new mongoose.Schema({
      type : mongoose.Schema.Types.ObjectId,
      required : true,
      refPath : 'type'
+   },
+   verified : {
+    type : Boolean,
+    default : false
    }
 
 },{timestamps : true});

@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios'
 import { useDispatch, useSelector } from "react-redux";
 import { setRegister } from "../../state/recruiter";
+import { setWelcome } from "../../state/welcome";
 
 const LoginBox = () => {
   return;
@@ -30,11 +31,18 @@ function Login({ handleButtonClick }) {
     e.preventDefault();
     if(loginData.email === '' || loginData.password === ''){
       setError('Enter all fields');
+      return;
     }
     //console.log(loginData);
     setError('');
     try {
     const response = await axios.post('http://localhost:3000/recruiter/login',loginData);
+    if(response.status === 206){
+      dispatch(setWelcome({
+        recruiter : response.data.recruiter
+      }));
+      navigate('/welcome');
+    }
     if(response.status ===200){
       dispatch(setRegister({
         recruit : response.data.recruiter,
@@ -45,7 +53,8 @@ function Login({ handleButtonClick }) {
       window.history.replaceState(null, null, '/dashboard');
     }
     } catch (error) {
-       setError(error.response.data.error);
+      console.log(error);
+       setError(error.response.data.message);
     }
   };
 

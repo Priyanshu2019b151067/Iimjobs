@@ -6,8 +6,10 @@ import { CgProfile } from "react-icons/cg";
 import axios from 'axios';
 import { IoIosAddCircleOutline } from "react-icons/io";
 import {useDispatch, useSelector} from 'react-redux'
-import { setRegister } from '../../state/recruiter';
+// import { setRegister } from '../../state/recruiter';
+
 import { useNavigate } from 'react-router-dom';
+import { setWelcome } from '../../state/welcome';
 
 
 function Signup({ onClose }) {
@@ -99,9 +101,9 @@ function Signup({ onClose }) {
         console.log(response.data.token);
 
         if(response.status === 201){
-            dispatch(setRegister({
-                recruit : response.data.newRecuiter,
-                token : response.data.token
+            dispatch(setWelcome({
+                recruiter : response.data.newRecuiter,
+                //token : response.data.token
             }))
             navigate('/welcome')
             clearFields();

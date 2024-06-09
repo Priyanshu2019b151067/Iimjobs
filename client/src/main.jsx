@@ -5,6 +5,7 @@ import App from './App.jsx';
 import './index.css';
 import recruiterReducer from './state/recruiter.jsx';
 import userReducer from './state/auth.jsx';
+import welcomeReducer from './state/welcome.jsx'
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { Provider } from 'react-redux';
 import {
@@ -23,7 +24,8 @@ import { PersistGate } from 'redux-persist/integration/react';
 // Combine your reducers
 const rootReducer = combineReducers({
   recruiter: recruiterReducer,
-  auth: userReducer
+  auth: userReducer,
+  welcome : welcomeReducer
 });
 
 // Configure persistence
